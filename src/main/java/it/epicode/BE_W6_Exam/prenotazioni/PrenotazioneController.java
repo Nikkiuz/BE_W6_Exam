@@ -23,7 +23,7 @@ public class PrenotazioneController {
 	//GET con Id
 	@GetMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Prenotazione findById(@PathVariable Long id) {
+	public PrenotazioneResponse findById(@PathVariable Long id) {
 		return prenotazioneService.findById(id);
 	}
 

@@ -25,7 +25,7 @@ public class DipendenteService {
 	}
 
 	public Dipendente modify(Long id, DipendenteRequest request){
-		Dipendente dipendente = findById(id);
+		Dipendente dipendente = dipendenteRepository.findById(id).get();
 		BeanUtils.copyProperties(request, dipendente);
 		dipendenteRepository.save(dipendente);
 		return dipendente;

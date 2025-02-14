@@ -31,7 +31,7 @@ class PrenotazioneService {
 	}
 
 	public Prenotazione modify(Long id, PrenotazioneRequest request) {
-		Prenotazione prenotazione = findById(id);
+		Prenotazione prenotazione = prenotazioneRepository.findById(id).get();
 		BeanUtils.copyProperties(request, prenotazione);
 		prenotazioneRepository.save(prenotazione);
 		return prenotazione;
@@ -78,12 +78,26 @@ class PrenotazioneService {
 
 	}
 
-	public Prenotazione findById(Long id) {
+	public PrenotazioneResponse findById(Long id) {
 
 		if (!prenotazioneRepository.existsById(id)) {
 			throw new EntityNotFoundException("Prenotazione non trovata");
 		}
-		return prenotazioneRepository.findById(id).get();
+		Prenotazione prenotazione = prenotazioneRepository.findById(id).get();
+
+		PrenotazioneResponse response = new PrenotazioneResponse();
+
+		BeanUtils.copyProperties(prenotazione, response);
+
+		if(prenotazione.getDipendente() != null) {
+			response.setDipendenteId(prenotazione.getDipendente().getId());
+		}
+
+		if(prenotazione.getViaggio() != null) {
+			response.setViaggioId(prenotazione.getViaggio().getId());
+		}
+
+		return response;
 	}
 
 	@Transactional
@@ -107,6 +121,15 @@ class PrenotazioneService {
 	public PrenotazioneResponse prenotazioneResponseFromEntity(Prenotazione prenotazione) {
 		PrenotazioneResponse response = new PrenotazioneResponse();
 		BeanUtils.copyProperties(prenotazione, response);
+
+		if(prenotazione.getDipendente() != null) {
+			response.setDipendenteId(prenotazione.getDipendente().getId());
+		}
+
+		if(prenotazione.getViaggio() != null) {
+			response.setViaggioId(prenotazione.getViaggio().getId());
+		}
+
 		return response;
 	}
 

@@ -18,7 +18,6 @@ import java.util.List;
 @Validated
 public class DipendenteService {
 	private final DipendenteRepository dipendenteRepository;
-	private final DipendenteRequest dipendenteRequest;
 
 	public List<DipendenteResponse> findAll() {
 		List<DipendenteResponse> response = dipendenteResponseListFromEntityList(dipendenteRepository.findAll());

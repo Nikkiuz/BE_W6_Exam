@@ -34,6 +34,13 @@ public class ViaggioController {
 		return viaggioService.save(request);
 	}
 
+	//PATCH STATUS
+	@PatchMapping("/{id}/{stato}")
+	@ResponseStatus(HttpStatus.OK)
+	public Viaggio updateStato(@PathVariable Long id, @PathVariable StatoViaggio stato) {
+		return viaggioService.updateStato(id, stato);
+	}
+
 	//PUT
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.OK)
