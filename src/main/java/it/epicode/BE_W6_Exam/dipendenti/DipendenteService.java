@@ -18,7 +18,6 @@ import java.util.List;
 @Validated
 public class DipendenteService {
 	private final DipendenteRepository dipendenteRepository;
-	private final DipendenteRequest dipendenteRequest;
 
 	public List<DipendenteResponse> findAll() {
 		List<DipendenteResponse> response = dipendenteResponseListFromEntityList(dipendenteRepository.findAll());
@@ -37,7 +36,7 @@ public class DipendenteService {
 			throw new EntityExistsException("Dipendente già esistente");
 		}
 
-		if (dipendenteRepository.existByNomeAndCognome(request.getNome(), request.getCognome())) {
+		if (dipendenteRepository.existsByNomeAndCognome(request.getNome(), request.getCognome())) {
 			throw new EntityExistsException("Dipendente già esistente: controllo su nome e cognome");
 		}
 

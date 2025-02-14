@@ -3,10 +3,12 @@ package it.epicode.BE_W6_Exam.dipendenti;
 import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Order(1)
 public class DipendenteRunner implements CommandLineRunner {
 	private final DipendenteRepository dipendenteRepository;
 	private final Faker faker;

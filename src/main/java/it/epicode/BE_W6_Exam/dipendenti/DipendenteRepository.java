@@ -10,5 +10,6 @@ public interface DipendenteRepository extends JpaRepository<Dipendente, Long> {
 	public boolean existsByEmail(String email);
 	public Dipendente findByUsername(String username);
 	public boolean existsByUsername(String username);
-	public boolean existByNomeAndCognome(String nome, String cognome);
+	public Dipendente findByNomeAndCognome(String nome, String cognome);
+	public boolean existsByNomeAndCognome(String nome, String cognome);
 }

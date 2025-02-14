@@ -2,40 +2,119 @@ package it.epicode.BE_W6_Exam.prenotazioni;
 
 import it.epicode.BE_W6_Exam.dipendenti.Dipendente;
 import it.epicode.BE_W6_Exam.dipendenti.DipendenteRepository;
+import it.epicode.BE_W6_Exam.responses.CreateResponse;
 import it.epicode.BE_W6_Exam.viaggi.Viaggio;
 import it.epicode.BE_W6_Exam.viaggi.ViaggioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Validated
 class PrenotazioneService {
 	private final PrenotazioneRepository prenotazioneRepository;
-	private final DipendenteRepository dipendenteRepository;
 	private final ViaggioRepository viaggioRepository;
+	private final DipendenteRepository dipendenteRepository;
 
-	public Prenotazione savePrenotazione(Long dipendenteId, Long viaggioId, LocalDate dataRichiesta, String note, String preferenze) {
-		Dipendente dipendente = dipendenteRepository.findById(dipendenteId)
-			.orElseThrow(() -> new EntityNotFoundException("Dipendente non trovato"));
-		Viaggio viaggio = viaggioRepository.findById(viaggioId)
-			.orElseThrow(() -> new EntityNotFoundException("Viaggio non trovato"));
 
-		if (prenotazioneRepository.existsByDipendenteAndViaggio(dipendente, viaggio)) {
-			throw new IllegalStateException("Il dipendente ha già una prenotazione per questo viaggio");
+	public List<PrenotazioneResponse> findAll() {
+		List<PrenotazioneResponse> response = prenotazioneResponseListFromEntityList(prenotazioneRepository.findAll());
+		return response;
+	}
+
+	public Prenotazione modify(Long id, PrenotazioneRequest request) {
+		Prenotazione prenotazione = findById(id);
+		BeanUtils.copyProperties(request, prenotazione);
+		prenotazioneRepository.save(prenotazione);
+		return prenotazione;
+	}
+
+	public CreateResponse save(@Valid PrenotazioneRequest request) {
+		if(prenotazioneRepository.existsByDipendenteAndViaggio(request.getDipendente(), request.getViaggio())) {
+			throw new RuntimeException("Prenotazione già esistente");
 		}
 
-		Prenotazione prenotazione = new Prenotazione();
-		prenotazione.setDipendente(dipendente);
-		prenotazione.setViaggio(viaggio);
-		prenotazione.setDataRichiesta(dataRichiesta);
-		prenotazione.setNote(note);
-		prenotazione.setPreferenze(preferenze);
+		Prenotazione prenotazione = prenotazioneFromRequest(request);
+		CreateResponse response = new CreateResponse();
+		prenotazioneRepository.save(prenotazione);
+		BeanUtils.copyProperties(prenotazione, response);
+		return response;
 
-		return prenotazioneRepository.save(prenotazione);
 	}
+
+	public void assegnaDipendenteAViaggio(Long viaggioId, Long dipendenteId) {
+		// Verifica se il dipendente esiste
+		Dipendente dipendente = dipendenteRepository.findById(dipendenteId)
+			.orElseThrow(() -> new RuntimeException("Dipendente non trovato"));
+
+		// Verifica se il viaggio esiste
+		Viaggio viaggio = viaggioRepository.findById(viaggioId)
+			.orElseThrow(() -> new RuntimeException("Viaggio non trovato"));
+
+		// Verifica se il dipendente è già assegnato a un altro viaggio nella stessa data
+		boolean esistePrenotazione = prenotazioneRepository.existsByDipendenteAndViaggio(dipendente, viaggio);
+		if (esistePrenotazione) {
+			throw new RuntimeException("Il dipendente è già assegnato a questo viaggio.");
+		}
+
+		// Crea la prenotazione
+		Prenotazione prenotazione = new Prenotazione();
+		prenotazione.setViaggio(viaggio);
+		prenotazione.setDipendente(dipendente);
+		prenotazioneRepository.save(prenotazione);
+
+	}
+
+	public Prenotazione findById(Long id) {
+
+		if (!prenotazioneRepository.existsById(id)) {
+			throw new EntityNotFoundException("Prenotazione non trovata");
+		}
+		return prenotazioneRepository.findById(id).get();
+	}
+
+	@Transactional
+	public PrenotazioneResponse findPrenotazioneResponseById(Long id) {
+		if(!prenotazioneRepository.existsById(id)) {
+			throw new EntityNotFoundException("Prenotazione non trovata");
+		}
+		Prenotazione prenotazione = prenotazioneRepository.findById(id).get();
+		PrenotazioneResponse response = new PrenotazioneResponse();
+		BeanUtils.copyProperties(prenotazione, response);
+		return response;
+	}
+
+	public void delete(Long id) {
+		if(!prenotazioneRepository.existsById(id)) {
+			throw new EntityNotFoundException("Prenotazione non trovata");
+		}
+		prenotazioneRepository.deleteById(id);
+	}
+
+	public PrenotazioneResponse prenotazioneResponseFromEntity(Prenotazione prenotazione) {
+		PrenotazioneResponse response = new PrenotazioneResponse();
+		BeanUtils.copyProperties(prenotazione, response);
+		return response;
+	}
+
+	public List<PrenotazioneResponse> prenotazioneResponseListFromEntityList(List<Prenotazione> prenotazioni) {
+		return prenotazioni.stream().map(this::prenotazioneResponseFromEntity).toList();
+	}
+
+
+	public Prenotazione prenotazioneFromRequest(PrenotazioneRequest request) {
+		Prenotazione prenotazione = new Prenotazione();
+		BeanUtils.copyProperties(request, prenotazione);
+		return prenotazione;
+	}
+
+
 }

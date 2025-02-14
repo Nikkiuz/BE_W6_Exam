@@ -30,6 +30,13 @@ class ViaggioService {
 		return viaggio;
 	}
 
+	public Viaggio updateStato(Long id, StatoViaggio stato) {
+		Viaggio viaggio = findById(id);
+		viaggio.setStato(stato);
+		viaggioRepository.save(viaggio);
+		return viaggio;
+	}
+
 	public CreateResponse save(@Valid ViaggioRequest request) {
 		if(viaggioRepository.existsByDestinazione(request.getDestinazione())) {
 			throw new EntityExistsException("Viaggio già esistente");

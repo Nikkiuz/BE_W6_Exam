@@ -37,7 +37,7 @@ public class DipendenteService {
 			throw new EntityExistsException("Dipendente già esistente");
 		}
 
-		if (dipendenteRepository.existByNomeAndCognome(request.getNome(), request.getCognome())) {
+		if (dipendenteRepository.existsByNomeAndCognome(request.getNome(), request.getCognome())) {
 			throw new EntityExistsException("Dipendente già esistente: controllo su nome e cognome");
 		}
 
@@ -46,7 +46,7 @@ public class DipendenteService {
 		CreateResponse response = new CreateResponse();
 		dipendenteRepository.save(dipendente);
 		BeanUtils.copyProperties(dipendente, response);
-		
+
 		return response;
 	}
 
