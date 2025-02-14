@@ -1,0 +1,13 @@
+package it.epicode.BE_W6_Exam.prenotazioni;
+
+import it.epicode.BE_W6_Exam.dipendenti.Dipendente;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
+
+
+@Repository
+interface PrenotazioneRepository extends JpaRepository<Prenotazione, Long> {
+	Prenotazione findByDipendenteAndDataRichiesta(Dipendente dipendente, LocalDate dataRichiesta);
+}

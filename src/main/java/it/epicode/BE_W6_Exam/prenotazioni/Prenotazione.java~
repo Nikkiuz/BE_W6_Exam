@@ -1,0 +1,4 @@
+package it.epicode.BE_W6_Exam.prenotazioni;
+
+public class Prenotazione {
+}

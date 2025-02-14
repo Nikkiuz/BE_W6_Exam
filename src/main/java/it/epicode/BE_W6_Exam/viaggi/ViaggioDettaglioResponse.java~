@@ -1,0 +1,4 @@
+package it.epicode.BE_W6_Exam.viaggi;
+
+public class ViaggioDettaglioResponse {
+}
