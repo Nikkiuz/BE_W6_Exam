@@ -3,6 +3,7 @@ package it.epicode.BE_W6_Exam.prenotazioni;
 import it.epicode.BE_W6_Exam.dipendenti.Dipendente;
 import it.epicode.BE_W6_Exam.viaggi.Viaggio;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,10 +14,16 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PrenotazioneRequest {
-	@NotBlank
+
 	private LocalDate dataRichiesta;
 
-	public Dipendente dipendente;
+	@NotNull(message = "Id Dipendente obbligatorio")
+	public Long dipendenteId;
 
-	public Viaggio viaggio;
+	@NotNull(message = "Id Viaggio obbligatorio")
+	public Long viaggioId;
+
+	public String note;
+
+	public String preferenze;
 }

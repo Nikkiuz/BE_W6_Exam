@@ -11,5 +11,5 @@ import java.time.LocalDate;
 @Repository
 interface PrenotazioneRepository extends JpaRepository<Prenotazione, Long> {
 	Prenotazione findByDipendenteAndDataRichiesta(Dipendente dipendente, LocalDate dataRichiesta);
-	boolean existsByDipendenteAndViaggio(Dipendente dipendente, Viaggio viaggio);
+	boolean existsByDipendenteIdAndViaggioId(Long dipendenteId, Long viaggioId);
 }

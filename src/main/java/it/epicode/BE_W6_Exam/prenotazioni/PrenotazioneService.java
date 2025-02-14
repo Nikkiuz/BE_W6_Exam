@@ -38,14 +38,19 @@ class PrenotazioneService {
 	}
 
 	public CreateResponse save(@Valid PrenotazioneRequest request) {
-		if(prenotazioneRepository.existsByDipendenteAndViaggio(request.getDipendente(), request.getViaggio())) {
+		if(prenotazioneRepository.existsByDipendenteIdAndViaggioId(request.getDipendenteId(), request.getViaggioId())) {
 			throw new RuntimeException("Prenotazione già esistente");
 		}
 
 		Prenotazione prenotazione = prenotazioneFromRequest(request);
+		Dipendente dipendente = dipendenteRepository.findById(request.getDipendenteId()).get();
+		Viaggio viaggio = viaggioRepository.findById(request.getViaggioId()).get();
+		prenotazione.setDipendente(dipendente);
+		prenotazione.setViaggio(viaggio);
 		CreateResponse response = new CreateResponse();
 		prenotazioneRepository.save(prenotazione);
 		BeanUtils.copyProperties(prenotazione, response);
+
 		return response;
 
 	}
@@ -60,7 +65,7 @@ class PrenotazioneService {
 			.orElseThrow(() -> new RuntimeException("Viaggio non trovato"));
 
 		// Verifica se il dipendente è già assegnato a un altro viaggio nella stessa data
-		boolean esistePrenotazione = prenotazioneRepository.existsByDipendenteAndViaggio(dipendente, viaggio);
+		boolean esistePrenotazione = prenotazioneRepository.existsByDipendenteIdAndViaggioId(dipendenteId, viaggioId);
 		if (esistePrenotazione) {
 			throw new RuntimeException("Il dipendente è già assegnato a questo viaggio.");
 		}

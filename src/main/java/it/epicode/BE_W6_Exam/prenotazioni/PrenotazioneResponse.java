@@ -15,6 +15,6 @@ public class PrenotazioneResponse {
 
 	private Long id;
 	private LocalDate dataRichiesta;
-	private Dipendente dipendente;
-	private Viaggio viaggio;
+	private Long dipendenteId;
+	private Long viaggioId;
 }
