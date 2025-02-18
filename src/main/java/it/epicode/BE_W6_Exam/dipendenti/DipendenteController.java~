@@ -31,7 +31,7 @@ public class DipendenteController {
 	//POST
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	@PreAuthorize("hasRole('USER')")
+	@PreAuthorize("hasRole('ADMIN')")
 	public CreateResponse save(@RequestBody DipendenteRequest request) {
 		return dipendenteService.save(request);
 	}

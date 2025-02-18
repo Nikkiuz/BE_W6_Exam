@@ -1,7 +1,7 @@
 package it.epicode.BE_W6_Exam.auth;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
+import it.epicode.BE_W6_Exam.exceptions.JwtTokenMissingException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
-    private it.epicode.security.auth.JwtTokenUtil jwtTokenUtil;
+    private JwtTokenUtil jwtTokenUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -52,7 +52,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         } else {
 
-                request.setAttribute("javax.servlet.error.exception", new it.epicode.security.auth.JwtTokenMissingException("JWT Token is missing"));
+                request.setAttribute("javax.servlet.error.exception", new JwtTokenMissingException("JWT Token is missing"));
                 request.getRequestDispatcher("/error").forward(request, response);
                 return;
         }

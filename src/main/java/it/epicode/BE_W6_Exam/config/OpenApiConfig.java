@@ -1,4 +1,4 @@
-package it.epicode.BE_W6_Exam.auth;
+package it.epicode.BE_W6_Exam.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

@@ -27,9 +27,9 @@ public class AppUserService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private it.epicode.security.auth.JwtTokenUtil jwtTokenUtil;
 
-    public AppUser registerUser(String username, String password, Set<Role> roles) {
+    public AppUser registerUser(String username, String password, Set<it.epicode.security.auth.Role> roles) {
         if (appUserRepository.existsByUsername(username)) {
             throw new EntityExistsException("Username già in uso");
         }

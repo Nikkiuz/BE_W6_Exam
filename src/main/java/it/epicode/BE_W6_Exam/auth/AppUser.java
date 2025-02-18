@@ -30,7 +30,7 @@ public class AppUser implements UserDetails {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<it.epicode.security.auth.Role> roles;
+    private Set<Role> roles;
 
     private  boolean accountNonExpired=true;
     private  boolean accountNonLocked=true;

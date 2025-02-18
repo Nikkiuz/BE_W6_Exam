@@ -17,21 +17,21 @@ public class AuthController {
     private final AppUserService appUserService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody it.epicode.security.auth.RegisterRequest registerRequest) {
+    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
         appUserService.registerUser(
                 registerRequest.getUsername(),
                 registerRequest.getPassword(),
-                Set.of(it.epicode.security.auth.Role.ROLE_USER) // Assegna il ruolo di default
+                Set.of(Role.ROLE_ADMIN) // Assegna il ruolo di default
         );
         return ResponseEntity.ok("Registrazione avvenuta con successo");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<it.epicode.security.auth.AuthResponse> login(@RequestBody it.epicode.security.auth.LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
         String token = appUserService.authenticateUser(
                 loginRequest.getUsername(),
                 loginRequest.getPassword()
         );
-        return ResponseEntity.ok(new it.epicode.security.auth.AuthResponse(token));
+        return ResponseEntity.ok(new AuthResponse(token));
     }
 }

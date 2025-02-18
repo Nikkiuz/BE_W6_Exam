@@ -1,4 +1,4 @@
-package it.epicode.BE_W6_Exam.auth;
+package it.epicode.BE_W6_Exam.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

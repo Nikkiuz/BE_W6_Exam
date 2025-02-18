@@ -1,4 +1,4 @@
-package it.epicode.BE_W6_Exam.auth;
+package it.epicode.BE_W6_Exam.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
